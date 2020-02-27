@@ -1,24 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Login from './components/forms/login';
+import { Redirect, Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import ReportPicker from './components/forms/reportPicker';
+
+// function PreLogin({ children }) {
+//   if (localStorage.getItem("query-auth-token") && location.href !== '/reports') {
+//     return <Redirect to="/reports" />;
+//   }
+//   return children;
+// }
+
+function ConnectedRoute(props) {
+  if (localStorage.getItem("query-auth-token")) {
+    return <Route {...props} />;
+  }
+  return <Redirect to="/auth" />;
+}
+
+function UnConnectedRoute(props) {
+  if (!localStorage.getItem("query-auth-token")) {
+    return <Route {...props} />;
+  }
+  return <Redirect to="/reports" />;
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <UnConnectedRoute exact path="/" component={Login} />
+          <ConnectedRoute exact path="/reports" component={ReportPicker} />
+          <UnConnectedRoute exact path="/auth" component={Login} />
+        </Switch>
+      </Router>
+      
+      
     </div>
   );
 }
