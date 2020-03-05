@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Login from './components/forms/login';
+import Register from './components/forms/register';
 import { Redirect, Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import ReportPicker from './components/forms/reportPicker';
 
@@ -32,7 +33,9 @@ function App() {
         <Switch>
           <UnConnectedRoute exact path="/" component={Login} />
           <ConnectedRoute exact path="/reports" component={ReportPicker} />
-          <UnConnectedRoute exact path="/auth" component={Login} />
+          <UnConnectedRoute exact path="/login" component={Login} />
+          <UnConnectedRoute exact path="/register" component={Register} />
+
         </Switch>
       </Router>
       

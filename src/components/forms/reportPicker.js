@@ -1,73 +1,276 @@
-import React from 'react';
-import {Formik, Form, Field} from 'formik';
+
+import React, {useState} from 'react';
 import {reportMaker} from '../../services/reportServices';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 
+const months = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
+const years = ['2019', '2020'];
 
-export default (props) => {
-    const months = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
-    const years = ['2019', '2020'];
-
-    const handleSubmit = async(values) => {
-        try {
-            const response = await reportMaker(values);
-            if (200 <= response.status <= 300) {
-                var element = document.createElement('a');
-                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(response.data));
-                element.setAttribute('download', values.reportName + '.csv');
-                element.style.display = 'none';
-                document.body.appendChild(element);
-                element.click();
-                document.body.removeChild(element);
-            }
-        }
-        catch(err){
-            console.log(err);
-        }
-
-    }
-    return (
-        <Formik initialValues={{ year:'2020', month: '01', reportName: 'queryTutorsHours'}} 
-                onSubmit={handleSubmit}>
-                    <Form>
-                        <div>
-                            <label>Pick a report</label>
-                            <Field as="select" name="reportName">
-                                <option key='1' value="queryTutorsHours">Tutors Hours</option>
-                                <option key='2' value="queryKivunA">Kivun part 1</option>
-                                <option key='3' value="queryKivunB">Kivun part 2</option>
-                                <option key='4' value="queryKivunC">Kivun part 3</option>
-                            </Field>
-                        </div>
-                        <div>
-                            <label>Pick A Month</label>
-                            <Field as="select" name="month">'
-                                {
-                                    Object.keys(months).map((month) => {
-                                        return <option key={month} value={months[month]}>{month}</option>;                                    })
-                                }
-
-                            </Field>
-                            
-                        </div>
-                        <div>
-                            <label>Pick A Year</label>
-                            <Field as="select" name="year">'
-                                {
-                                    years.map((year) => {
-                                        return <option key={year} value={year}>{year}</option>;                                    
-                                    })
-                                }
-
-                            </Field>
-                            
-                        </div>
-                        <div>
-                            <button type='submit'>Make Report</button>
-                        </div>
-                    </Form>
-        </Formik>
-        
-    );
-
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Beliba Homa
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }
 
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    ul: {
+      margin: 0,
+      padding: 0,
+      listStyle: 'none',
+    },
+  },
+  appBar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  toolbar: {
+    flexWrap: 'wrap',
+  },
+  toolbarTitle: {
+    flexGrow: 1,
+  },
+  link: {
+    margin: theme.spacing(1, 1.5),
+  },
+  heroContent: {
+    padding: theme.spacing(8, 0, 6),
+  },
+  cardHeader: {
+    backgroundColor:
+      theme.palette.type === 'dark' ? theme.palette.grey[700] : theme.palette.grey[200],
+  },
+  cardPricing: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+    marginBottom: theme.spacing(2),
+  },
+  footer: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(8),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: theme.spacing(6),
+      paddingBottom: theme.spacing(6),
+    },
+  },
+}));
+
+const reports = [
+  {
+    title: 'Tutors Hours',
+    reportName: 'queryTutorsHours',
+    description: [],
+    buttonText: 'Download Report',
+    buttonVariant: 'contained',
+  },
+  {
+    title: 'Kivun Part 1',
+    reportName: 'queryKivunA',
+    description: [
+    ],
+    buttonText: 'Download Report',
+    buttonVariant: 'contained',
+  },
+  {
+    title: 'Kivun Part 2',
+    reportName: 'queryKivunB',
+    description: [
+    ],
+    buttonText: 'Download Report',
+    buttonVariant: 'contained',
+  },
+  {
+    title: 'Kivun Part 3',
+    reportName: 'queryKivunC',
+    description: [
+    ],
+    buttonText: 'Download Report',
+    buttonVariant: 'contained',
+  },
+];
+
+export default function ReportPicker(props) {
+
+    const [month, setMonth] = useState('')
+    const [year, setYear] = useState('')
+
+  
+    const updateMonth = (event) => {
+        setMonth(event.target.value);
+        
+    }
+    const updateYear = (event) => {
+        setYear(event.target.value);
+        
+    }
+
+const handleSubmit = async(reportName) => {
+    try {
+        const response = await reportMaker({ year: year, month: month, reportName: reportName });
+        if (200 <= response.status <= 300) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(response.data));
+            element.setAttribute('download', reportName + '.csv');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+  const classes = useStyles();
+  const logout = () => {
+    localStorage.removeItem("query-auth-token");
+    props.history.push('/login');
+  }
+
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
+        <Toolbar className={classes.toolbar}>
+          <Typography variant="h6" align="left" color="inherit" noWrap className={classes.toolbarTitle}>
+            Beliba Homa Querying
+          </Typography>
+          {/* <nav>
+            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
+              Features
+            </Link>
+            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
+              Enterprise
+            </Link>
+            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
+              Support
+            </Link>
+          </nav> */}
+          <Button onClick={logout} color="primary" variant="outlined" className={classes.link}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+      {/* Hero unit */}
+      <Container maxWidth="sm" component="main" className={classes.heroContent}>
+        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+          Monthly Reports
+        </Typography>
+        <Typography variant="h5" align="center" color="textSecondary" component="p">
+          Choose your form out of the following options:
+        </Typography>
+      </Container>
+      {/* End hero unit */}
+      <Container maxWidth="md" component="main">
+        <Grid container spacing={5} alignItems="flex-end">
+          {reports.map(report => (
+            // Enterprise card is full width at sm breakpoint
+            <Grid item key={report.title} xs={12} sm={report.title === 'Enterprise' ? 12 : 6} md={4}>
+              <Card>
+                <CardHeader
+                  title={report.title}
+                  subheader={report.subheader}
+                  titleTypographyProps={{ align: 'center' }}
+                  subheaderTypographyProps={{ align: 'center' }}
+                  className={classes.cardHeader}
+                />
+                <CardContent >
+                  <div className={classes.cardPricing} >
+                    <FormControl variant="outlined" className={classes.formControl}>
+                        <InputLabel>
+                        Month
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value={month}
+                            onChange={updateMonth}
+                            // labelWidth={labelWidth}
+                            >
+                        
+                            {
+                                
+                                Object.keys(months).map((month) => {
+                                return <MenuItem key={month} value={months[month]}>{month}</MenuItem>;                                    })
+                                
+                            }
+                        </Select>
+                    </FormControl>
+                  </div>
+                  <div className={classes.cardPricing}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                            <InputLabel>
+                                Year
+                            </InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={year}
+                                onChange={updateYear}
+                                // labelWidth={labelWidth}
+                                >
+                            
+                                {
+                                    
+                                    years.map((year) => {
+                                        return <MenuItem key={year} value={year}>{year}</MenuItem>;                                    
+                                    })                                   
+                                    
+                                }
+                            </Select>
+                        </FormControl>
+                  </div>
+                  <ul>
+                    {report.description.map(line => (
+                      <Typography component="li" variant="subtitle1" align="center" key={line}>
+                        {line}
+                      </Typography>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardActions>
+                  <Button onClick={() => handleSubmit(report.reportName)} fullWidth variant={report.buttonVariant} color="primary">
+                    {report.buttonText}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+      {/* Footer */}
+      <Container maxWidth="md" component="footer" className={classes.footer}>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+      {/* End footer */}
+    </React.Fragment>
+  );
+}
