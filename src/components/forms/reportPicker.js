@@ -142,9 +142,9 @@ const handleSubmit = async(reportName) => {
             element.click();
             document.body.removeChild(element);
         }
-    }
-    catch(err){
+    }catch(err){
         console.log(err);
+        logout();
     }
 }
   const classes = useStyles();

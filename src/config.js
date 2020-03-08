@@ -1,3 +1,3 @@
 module.exports = {
-    server_address: 'http://belibahomaquerynode.herokuapp.com'
+    server_address: 'localhost://3000' || 'http://belibahomaquerynode.herokuapp.com'
 }
