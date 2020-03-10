@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {server_address} from '../config';
+import {server_address} from '../util/config';
 
 
 export const reportMaker = async (reportProperties) => {
