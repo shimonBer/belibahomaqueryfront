@@ -2,29 +2,11 @@ import React from 'react';
 import './App.css';
 import Login from './components/forms/login';
 import Register from './components/forms/register';
-import { Redirect, Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { Switch, BrowserRouter as Router } from "react-router-dom";
 import ReportPicker from './components/forms/reportPicker';
+import ConnectedRoute from './components/routes/ConnectedRoute';
+import UnConnectedRoute from './components/routes/UnConnectedRoute';
 
-// function PreLogin({ children }) {
-//   if (localStorage.getItem("query-auth-token") && location.href !== '/reports') {
-//     return <Redirect to="/reports" />;
-//   }
-//   return children;
-// }
-
-function ConnectedRoute(props) {
-  if (localStorage.getItem("query-auth-token")) {
-    return <Route {...props} />;
-  }
-  return <Redirect to="/auth" />;
-}
-
-function UnConnectedRoute(props) {
-  if (!localStorage.getItem("query-auth-token")) {
-    return <Route {...props} />;
-  }
-  return <Redirect to="/reports" />;
-}
 
 function App() {
   return (
