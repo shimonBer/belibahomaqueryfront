@@ -16,7 +16,8 @@
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "export ENVIRONMENT=='prod' && react-scripts start",
+    "start-dev": "export environment=='dev' && react-scripts start",
     "build": "react-scripts build && npm run copy-build",
     "copy-build": "rm -R ../belibahomaquery/build && cp -r ./build ../belibahomaquery",
     "test": "react-scripts test",

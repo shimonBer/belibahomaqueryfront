@@ -13,19 +13,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Beliba Homa
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Copyright from '../copyRight';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -55,13 +43,14 @@ export default function Login(props) {
     const classes = useStyles();
 
     const login = async(values) => {
+      values.preventDefault();
       try {
-          values.preventDefault();
           const response = await loginService({email: email, password: password});
           if (200 <= response.status <= 300) {
               localStorage.setItem("query-auth-token", response.data.token);
               props.history.push('/reports');
-          }}catch(err){
+          }
+      }catch(err){
           console.log(err);
       }
     }
