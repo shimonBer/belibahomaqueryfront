@@ -1,3 +1,4 @@
 module.exports = {
-    server_address: process.env.ENVIRONMENT === 'dev' ? 'http://localhost:3000' : 'http://belibahomaquerynode.herokuapp.com'
+    PROD_SERVER_ADDRESS: 'http://belibahomaquerynode.herokuapp.com',
+    DEV_SERVER_ADDRESS: 'http://localhost:3000'
 }
