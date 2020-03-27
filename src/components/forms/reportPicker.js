@@ -19,6 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Copyright from '../copyRight';
+import downloadFile from '../../util/downloadReport';
 
 const months = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
 const years = ['2019', '2020'];
@@ -104,8 +105,8 @@ const reports = [
 
 export default function ReportPicker(props) {
 
-    const [month, setMonth] = useState('')
-    const [year, setYear] = useState('')
+    const [month, setMonth] = useState('01')
+    const [year, setYear] = useState('2020')
 
   
     const updateMonth = (event) => {
@@ -117,17 +118,11 @@ export default function ReportPicker(props) {
         
     }
 
-const handleSubmit = async(reportName) => {
+const handleSubmit = async(reportType) => {
     try {
-        const response = await reportMaker({ year: year, month: month, reportName: reportName });
+        const response = await reportMaker({ year, month, reportType });
         if (200 <= response.status <= 300) {
-            var element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(response.data));
-            element.setAttribute('download', reportName + '.csv');
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+            await downloadFile(response.data.downloadURL);
         }
     }catch(err){
         console.log(err);
@@ -146,7 +141,7 @@ const handleSubmit = async(reportName) => {
       <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Typography variant="h6" align="left" color="inherit" noWrap className={classes.toolbarTitle}>
-            Beliba Homa Querying
+            Beliba Homa Reports
           </Typography>
           {/* <nav>
             <Link variant="button" color="textPrimary" href="#" className={classes.link}>
