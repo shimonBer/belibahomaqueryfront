@@ -118,18 +118,11 @@ export default function ReportPicker(props) {
         
     }
 
-const handleSubmit = async(reportName) => {
+const handleSubmit = async(reportType) => {
     try {
-        const response = await reportMaker({ year: year, month: month, reportName: reportName });
+        const response = await reportMaker({ year, month, reportType });
         if (200 <= response.status <= 300) {
-            // var element = document.createElement('a');
-            // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(response.data));
-            // element.setAttribute('download', reportName + '.csv');
-            // element.style.display = 'none';
-            // document.body.appendChild(element);
-            // element.click();
-            // document.body.removeChild(element);
-            await downloadFile(response.data.filename);
+            await downloadFile(response.data.downloadURL);
         }
     }catch(err){
         console.log(err);
@@ -148,7 +141,7 @@ const handleSubmit = async(reportName) => {
       <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Typography variant="h6" align="left" color="inherit" noWrap className={classes.toolbarTitle}>
-            Beliba Homa Querying
+            Beliba Homa Reports
           </Typography>
           {/* <nav>
             <Link variant="button" color="textPrimary" href="#" className={classes.link}>
