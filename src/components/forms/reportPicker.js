@@ -1,6 +1,6 @@
 
-import React, {useState} from 'react';
-import {reportMaker} from '../../services/reportServices';
+import React, { useState, useEffect } from 'react';
+import { reportMakerService, reportNamesService } from '../../services/reportServices';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -69,44 +69,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const reports = [
-  {
-    title: 'Tutors Hours',
-    reportName: 'queryTutorsHours',
-    description: [],
-    buttonText: 'Download Report',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Kivun Part 1',
-    reportName: 'queryKivunA',
-    description: [
-    ],
-    buttonText: 'Download Report',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Kivun Part 2',
-    reportName: 'queryKivunB',
-    description: [
-    ],
-    buttonText: 'Download Report',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Kivun Part 3',
-    reportName: 'queryKivunC',
-    description: [
-    ],
-    buttonText: 'Download Report',
-    buttonVariant: 'contained',
-  },
-];
-
 export default function ReportPicker(props) {
 
-    const [month, setMonth] = useState('01')
-    const [year, setYear] = useState('2020')
+    const [month, setMonth] = useState('01');
+    const [year, setYear] = useState('2020');
+    const [reportNames, setReportNames] = useState([]);
+
+    useEffect(() => {
+        (async function getReportNames(){
+          const reports = await reportNamesService();
+          setReportNames(reports.data);
+        })()
+    }, [reportNamesService]);
 
   
     const updateMonth = (event) => {
@@ -120,7 +94,7 @@ export default function ReportPicker(props) {
 
 const handleSubmit = async(reportType) => {
     try {
-        const response = await reportMaker({ year, month, reportType });
+        const response = await reportMakerService({ year, month, reportType });
         if (200 <= response.status <= 300) {
             await downloadFile(response.data.downloadURL);
         }
@@ -169,15 +143,14 @@ const handleSubmit = async(reportType) => {
         </Typography>
       </Container>
       {/* End hero unit */}
-      <Container maxWidth="md" component="main">
+      <Container maxWidth="lg" component="main">
         <Grid container spacing={5} alignItems="flex-end">
-          {reports.map(report => (
+          {reportNames.map(report => (
             // Enterprise card is full width at sm breakpoint
-            <Grid item key={report.title} xs={12} sm={report.title === 'Enterprise' ? 12 : 6} md={4}>
+            <Grid key={report} item md={4}>
               <Card>
                 <CardHeader
-                  title={report.title}
-                  subheader={report.subheader}
+                  title={report}
                   titleTypographyProps={{ align: 'center' }}
                   subheaderTypographyProps={{ align: 'center' }}
                   className={classes.cardHeader}
@@ -229,16 +202,16 @@ const handleSubmit = async(reportType) => {
                         </FormControl>
                   </div>
                   <ul>
-                    {report.description.map(line => (
+                    {/* {report.description.map(line => (
                       <Typography component="li" variant="subtitle1" align="center" key={line}>
                         {line}
                       </Typography>
-                    ))}
+                    ))} */}
                   </ul>
                 </CardContent>
                 <CardActions>
-                  <Button onClick={() => handleSubmit(report.reportName)} fullWidth variant={report.buttonVariant} color="primary">
-                    {report.buttonText}
+                  <Button onClick={() => handleSubmit(report)} fullWidth variant="contained" color="primary">
+                    Download Report
                   </Button>
                 </CardActions>
               </Card>
