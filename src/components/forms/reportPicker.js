@@ -80,7 +80,7 @@ export default function ReportPicker(props) {
           const reports = await reportNamesService();
           setReportNames(reports.data);
         })()
-    }, [reportNamesService]);
+    }, []);
 
   
     const updateMonth = (event) => {
