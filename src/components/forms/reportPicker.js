@@ -20,6 +20,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Copyright from '../copyRight';
 import downloadFile from '../../util/downloadReport';
+import  "../../api";
+
 
 const months = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
 const years = ['2019', '2020'];
@@ -75,12 +77,22 @@ export default function ReportPicker(props) {
     const [year, setYear] = useState('2020');
     const [reportNames, setReportNames] = useState([]);
 
-    useEffect(() => {
-        (async function getReportNames(){
-          const reports = await reportNamesService();
-          setReportNames(reports.data);
-        })()
-    }, []);
+    // const reportsNames = useSelector(state => state.reportNamesReducer);
+    const reportsNames = ['queryTutorsHours',
+      'queryKivunA',
+      'queryKivunB',
+      'queryKivunC',
+      'queryGeneralParticipents']
+
+
+    // useEffect(() => {
+    //     // (async function getReportNames(){
+    //     //   const reports = await reportNamesService();
+    //     //   setReportNames(reports.data);
+    //     // })()
+    //     dispatch(reportNamesAction());
+
+    // }, []);
 
   
     const updateMonth = (event) => {
@@ -95,13 +107,14 @@ export default function ReportPicker(props) {
 const handleSubmit = async(reportType) => {
     try {
         const response = await reportMakerService({ year, month, reportType });
-        if (200 <= response.status <= 300) {
-            await downloadFile(response.data.downloadURL);
-        }
+        // if (200 <= response.status <= 300) {
+        //     await downloadFile(response.data.downloadURL);
+        // }
     }catch(err){
         console.log(err);
         logout();
     }
+    // requestForReport()
 }
   const classes = useStyles();
   const logout = () => {
@@ -143,9 +156,9 @@ const handleSubmit = async(reportType) => {
         </Typography>
       </Container>
       {/* End hero unit */}
-      <Container maxWidth="lg" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
-          {reportNames.map(report => (
+      <Container maxWidth="md" component="main">
+        <Grid container spacing={5} alignItems="flex-end" justify-content="center"  flex-wrap="wrap">
+          {reportsNames.map(report => (
             // Enterprise card is full width at sm breakpoint
             <Grid key={report} item md={4}>
               <Card>
