@@ -24,7 +24,7 @@ import  "../../api";
 
 
 const months = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
-const years = ['2019', '2020'];
+const years = ['2019', '2020', '2021'];
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
 export default function ReportPicker(props) {
 
     const [month, setMonth] = useState('01');
-    const [year, setYear] = useState('2020');
+    const [year, setYear] = useState('2021');
     const [reportNames, setReportNames] = useState([]);
 
     // const reportsNames = useSelector(state => state.reportNamesReducer);
