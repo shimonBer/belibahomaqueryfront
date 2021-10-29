@@ -82,7 +82,8 @@ export default function ReportPicker(props) {
       'queryKivunA',
       'queryKivunB',
       'queryKivunC',
-      'queryGeneralParticipents']
+      'queryGeneralParticipents',
+      'queryMedavhim']
 
 
     // useEffect(() => {
