@@ -9,7 +9,7 @@ const reportMakerService = async (reportProperties) => {
     const headers = { "Content-Type": "blob", "x-access-token": localStorage.getItem("query-auth-token") }
     const config = {
         method: "GET",
-        url: `${base_address}/api/reports/staticReport?reportType=${reportProperties.reportType}&month=${reportProperties.month}-${reportProperties.year}`,
+        url: `${base_address}/api/reports/staticReport?reportType=${reportProperties.reportType}&month=${reportProperties.year}-${reportProperties.month}`,
         responseType: "arraybuffer",
         headers,
     }
