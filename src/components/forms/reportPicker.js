@@ -83,7 +83,9 @@ export default function ReportPicker(props) {
         "queryKivunB",
         "queryKivunC",
         "queryGeneralParticipents",
-        "quaterlyKivunReport"
+        "quaterlyKivunReport",
+        "allTrainees",
+        "allTutors"
     ]
 
     // useEffect(() => {
@@ -109,6 +111,7 @@ export default function ReportPicker(props) {
             })
         } catch (err) {
             console.log(err)
+            logout()
         }
     }
     const classes = useStyles()
