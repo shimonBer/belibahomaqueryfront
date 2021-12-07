@@ -78,11 +78,11 @@ export default function ReportPicker(props) {
 
     // const reportsNames = useSelector(state => state.reportNamesReducer);
     const reportsNames = [
-        "queryTutorsHours",
-        "queryKivunA",
-        "queryKivunB",
-        "queryKivunC",
-        "queryGeneralParticipents",
+        // "queryTutorsHours",
+        // "queryKivunA",
+        // "queryKivunB",
+        // "queryKivunC",
+        // "queryGeneralParticipents",
         "quaterlyKivunReport",
         "allTrainees",
         "allTutors"
