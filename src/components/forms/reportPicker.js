@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import {
-    reportMakerService,
+    generateReportService,
     reportNamesService,
+    getReportService,
 } from "../../services/reportServices"
 import AppBar from "@material-ui/core/AppBar"
 import Button from "@material-ui/core/Button"
@@ -78,17 +79,16 @@ export default function ReportPicker(props) {
 
     // const reportsNames = useSelector(state => state.reportNamesReducer);
     const reportsNames = [
-        // "queryTutorsHours",
+        "queryTutorsHours",
         // "queryKivunA",
         // "queryKivunB",
         // "queryKivunC",
         // "queryGeneralParticipents",
         "quaterlyKivunReport",
         "allTrainees",
-        "allTutors"
+        "allTutors",
     ]
 
-    
     // useEffect(() => {
     //     // (async function getReportNames(){
     //     //   const reports = await reportNamesService();
@@ -103,18 +103,37 @@ export default function ReportPicker(props) {
         setMonth(month)
     }
 
-    const handleSubmit = async (reportType) => {
+    const handleGenerateReport = async (reportType) => {
         try {
-            await reportMakerService({
+            let reportId = await generateReportService({
                 year,
                 month,
                 reportType,
             })
+            localStorage.setItem(reportType, reportId)
         } catch (err) {
             console.log(err)
             logout()
         }
     }
+
+    const handleGetReport = async (reportType) => {
+        try {
+            let reportId = localStorage.getItem(reportType)
+            await getReportService(
+                {
+                    year,
+                    month,
+                    reportType,
+                },
+                reportId
+            )
+        } catch (err) {
+            console.log(err)
+            logout()
+        }
+    }
+
     const classes = useStyles()
     const logout = () => {
         localStorage.removeItem("query-auth-token")
@@ -213,10 +232,22 @@ export default function ReportPicker(props) {
                                 </CardContent>
                                 <CardActions>
                                     <Button
-                                        onClick={() => handleSubmit(report)}
+                                        onClick={() =>
+                                            handleGenerateReport(report)
+                                        }
                                         fullWidth
                                         variant="contained"
                                         color="primary"
+                                    >
+                                        Generate Report
+                                    </Button>
+                                </CardActions>
+                                <CardActions>
+                                    <Button
+                                        onClick={() => handleGetReport(report)}
+                                        fullWidth
+                                        variant="contained"
+                                        color="Secondary"
                                     >
                                         Download Report
                                     </Button>

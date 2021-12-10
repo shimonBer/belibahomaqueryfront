@@ -3,13 +3,15 @@ import serverAddress from "../util/serverAddress"
 
 const base_address = serverAddress()
 
-
-const reportMakerService = async (reportProperties) => {
+const getReportService = async (reportProperties, reportId) => {
     // Its important to set the 'Content-Type': 'blob' and responseType:'arraybuffer'.
-    const headers = { "Content-Type": "blob", "x-access-token": localStorage.getItem("query-auth-token") }
+    const headers = {
+        "Content-Type": "blob",
+        "x-access-token": localStorage.getItem("query-auth-token"),
+    }
     const config = {
         method: "GET",
-        url: `${base_address}/api/reports/staticReport?reportType=${reportProperties.reportType}&month=${reportProperties.year}-${reportProperties.month}`,
+        url: `${base_address}/api/reports/staticReport/get?reportId=${reportId}`,
         responseType: "arraybuffer",
         headers,
     }
@@ -34,7 +36,6 @@ const reportMakerService = async (reportProperties) => {
     }
 }
 
-
 const reportNamesService = async () => {
     const response = await axios({
         method: "get",
@@ -47,4 +48,18 @@ const reportNamesService = async () => {
     return response
 }
 
-export { reportMakerService, reportNamesService }
+const generateReportService = async (reportProperties) => {
+    const res = await axios({
+        method: "get",
+        url: `${base_address}/api/reports/staticReport?reportType=${reportProperties.reportType}&month=${reportProperties.year}-${reportProperties.month}`,
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("query-auth-token"),
+        },
+    })
+    if (res) {
+        return res?.data
+    }
+}
+
+export { getReportService, generateReportService, reportNamesService }
