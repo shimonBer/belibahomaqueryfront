@@ -18,6 +18,11 @@ const getReportService = async (reportProperties, reportId) => {
 
     try {
         const response = await axios(config)
+        if(response.data.byteLength < 100){
+            alert("Report is not ready yet, try again in 30 seconds");
+            return
+
+        }
 
         const outputFilename = `${reportProperties.reportType}-${reportProperties.month}-${reportProperties.year}.xlsx`
 
