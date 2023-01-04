@@ -87,6 +87,7 @@ export default function ReportPicker(props) {
         "quaterlyKivunReport",
         "allTrainees",
         "allTutors",
+        "maayanBamidbarYearly"
     ]
 
     // useEffect(() => {
